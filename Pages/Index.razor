@@ -1,0 +1,53 @@
+﻿@page "/"
+
+
+@using Syncfusion.Blazor.Schedule
+@using Syncfusion.Blazor.Buttons
+<SfButton OnClick="@GenerateRecurrenceRule">Generate Recurrence Rule</SfButton>
+<SfSchedule TValue="AppointmentData" Width="100%" Height="650px">
+    <ScheduleEvents TValue="AppointmentData" ></ScheduleEvents>
+    <ScheduleViews>
+        <ScheduleView Option="View.Week"></ScheduleView>
+        <ScheduleView Option="View.Year"></ScheduleView>
+    </ScheduleViews>
+</SfSchedule>
+
+<div>
+    @foreach (var date in dateCollection)
+    {
+        <p>@date.ToString()</p>
+    }
+</div>
+
+
+@code {
+    public DateTime CurrentDate = new DateTime(2024, 6, 12);
+    List<DateTime> dateCollection = new List<DateTime>();
+    public void GenerateRecurrenceRule()
+    {
+        int firstDayOfWeek = 0; // Sunday
+        DateTime recurrenceStartDate = new DateTime(2024, 1, 1);
+        DateTime recurrenceEndDate = new DateTime(2024, 1, 1);
+        DateTime dateRangeStart = new DateTime(2024, 1, 1);
+        DateTime dateRangeEnd = new DateTime(2024, 1, 1);
+
+        dateCollection = new List<DateTime>(RecurrenceHelper.GetRecurrenceDateTimeCollection("FREQ=YEARLY;BYMONTH=1;BYDAY=SU,MO,TU,WE,TH,FR,SA;UNTIL=20240131T235959Z;", "", firstDayOfWeek, recurrenceStartDate, recurrenceEndDate, dateRangeStart, dateRangeEnd, 10));
+        // dateCollection = RecurrenceHelper.GetRecurrenceDateTimeCollection("FREQ = WEEKLY; BYDAY = FR,SA; INTERVAL = 1;", DateTime.Now);
+
+       StateHasChanged();
+    }
+
+    public class AppointmentData
+    {
+       
+        public int Id { get; set; }
+        public string Subject { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+         //bool IsAllDay { get; set; }
+        public string RecurrenceRule { get; set; }
+        public Nullable<int> RecurrenceID { get; set; }
+        public string RecurrenceException { get; set; }
+        public string Description { get; set; }
+    }
+}
